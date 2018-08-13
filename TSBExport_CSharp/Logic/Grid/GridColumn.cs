@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
@@ -11,8 +12,19 @@ namespace TSBExport_CSharp.Grid
     {
         protected static List<Type> allowedTypes = new List<Type> { typeof(String), typeof(DateTime), typeof(Double), typeof(Int32) };
 
-        public String format;
+        public event EventHandler formatChanged;
 
+        public String Format
+        {
+            get => _format;
+            set
+            {
+                _format = value;
+                formatChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        private String _format;
         private object _value1;
         private object _value2;
 
@@ -67,7 +79,7 @@ namespace TSBExport_CSharp.Grid
         {
             Value1 = value1;
             if (value2 != null) Value2 = value2;
-            this.format = format;
+            this.Format = format;
         }
     }
 }

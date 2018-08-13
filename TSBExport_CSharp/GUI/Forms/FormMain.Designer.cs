@@ -51,6 +51,7 @@
             this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dataGridView1.Size = new System.Drawing.Size(794, 357);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
             // 
             // menuStrip1
             // 

@@ -21,9 +21,9 @@ namespace TSBExport_CSharp
                 new GridColumn("{row}."),
                 new GridColumn("Example Text"),
                 new GridColumn(10000, 99999),
-                new GridColumn(new DateTime(2010, 1, 1), new DateTime(2020, 12, 30)),
-                new GridColumn(new DateTime(2010, 1, 1, 0, 0, 0), new DateTime(2010, 1, 1, 23, 59, 59)),
-                new GridColumn(10000d, 99999d)
+                new GridColumn(new DateTime(2010, 1, 1), new DateTime(2020, 12, 30), "dd MMMM yyyy, dddd"),
+                new GridColumn(new DateTime(2010, 1, 1, 0, 0, 0), new DateTime(2010, 1, 1, 23, 59, 59), "HH:mm:ss"),
+                new GridColumn(10000d, 99999d, "N3")
             });
 
             settings.GridSettings = ts;
@@ -31,7 +31,7 @@ namespace TSBExport_CSharp
             settings.Save();
         }
 
-        public static void AddTableControls(Form parent, ToolStripMenuItem menu, DataGridView dataGridView, BindingSource bindingSource)
+        public static void AddTableControls(FormMain parent, ToolStripMenuItem menu, DataGridView dataGridView, BindingSource bindingSource)
         {
 
             menu.DropDownItems.Add(Decorator.CreateCheckboxToolStrip(true, "Header", isVisible =>
@@ -79,10 +79,13 @@ namespace TSBExport_CSharp
                     }
                 });
 
-                grid.Rows.Add("1", "String");
-                grid.Rows.Add("2", "String");
-                grid.Rows.Add("3", "Date", "dd.MM.yyyy");
-                grid.Rows.Add("4", "Integer", "c");
+                int index = 0;
+                foreach (var column in parent.Columns)
+                {
+                    grid.Rows.Add(++index, column.type.Name, column.Format);
+                }
+
+                grid.CellValueChanged += (o, ev) => parent.Columns[ev.RowIndex].Format = grid.Rows[ev.RowIndex].Cells[ev.ColumnIndex].Value.ToString();
 
                 Form dialog = new Form();
                 dialog.Text = "Data rows format";

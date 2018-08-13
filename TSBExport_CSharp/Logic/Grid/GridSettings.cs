@@ -20,12 +20,12 @@ namespace TSBExport_CSharp.Grid
 
             for (int i = 0; i < columns.Count; i++)
             {
-                data.Columns.Add(new DataColumn());
+                data.Columns.Add(new DataColumn("Column_"+i, columns[i].type));
             }
 
             DataRow header = data.NewRow();
-            for (int i = 0; i < data.Columns.Count; i++)
-                header[i] = i == 0 ? "#" : $"Header_{i}";
+            //for (int i = 0; i < data.Columns.Count; i++)
+            //    header[i] = i == 0 ? "#" : $"Header_{i}";
             data.Rows.Add(header);
 
             // Array of random because columns should be independent of each other
@@ -40,8 +40,8 @@ namespace TSBExport_CSharp.Grid
             }
 
             DataRow footer = data.NewRow();
-            for (int i = 0; i < data.Columns.Count; i++)
-                footer[i] = i == 0 ? "#" : $"Footer_{i}";
+            //for (int i = 0; i < data.Columns.Count; i++)
+            //    footer[i] = i == 0 ? "#" : $"Footer_{i}";
             data.Rows.Add(footer);
 
             return data;

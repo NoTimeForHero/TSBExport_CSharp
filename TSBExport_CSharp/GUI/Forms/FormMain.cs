@@ -9,20 +9,21 @@ namespace TSBExport_CSharp
 {
     public partial class FormMain : Form
     {
-        public List<GridCellsAppearance> viewSettings = new List<GridCellsAppearance>();
+        public IList<GridColumn> Columns => gridSettings.columns.AsReadOnly();
 
-        public GridCellsAppearance currentGridCellsAppearance
+        private readonly List<GridCellsAppearance> viewSettings = new List<GridCellsAppearance>();
+        private GridCellsAppearance currentGridCellsAppearance
         {
             get => viewSettings.FirstOrDefault(x => x.name == settings.CurrentApperance);
             set => settings.CurrentApperance = value.name;
         }
 
-        protected GridSettings gridSettings;
-        protected BindingSource dataGridBindingSource = new BindingSource();
-        protected ConfigSettings settings;
+        private readonly BindingSource dataGridBindingSource = new BindingSource();
+        private readonly ConfigSettings settings;
+        private GridSettings gridSettings;
 
         public delegate void OnAddStyles(List<GridCellsAppearance> viewSettings);
-        public delegate void OnAddTableControls(Form parent, ToolStripMenuItem menu, DataGridView dataGridView, BindingSource bindingSource);
+        public delegate void OnAddTableControls(FormMain parent, ToolStripMenuItem menu, DataGridView dataGridView, BindingSource bindingSource);
 
         public OnAddTableControls AddTableControls;
         public OnAddStyles AddStyles;
@@ -32,6 +33,22 @@ namespace TSBExport_CSharp
             this.settings = settings;
             this.gridSettings = settings.GridSettings;
             InitializeComponent();
+        }
+
+        private void UpdateDataGridFormat()
+        {
+            for (int i = 0; i < dataGridView1.ColumnCount && i < gridSettings.columns.Count; i++)
+            { 
+                dataGridView1.Columns[i].DefaultCellStyle.Format = gridSettings.columns[i].Format;
+            }
+        }
+
+        private void BindFormatChangeEvent()
+        {
+            foreach (var column in gridSettings.columns)
+            {
+                column.formatChanged += (o, ev) => UpdateDataGridFormat();
+            }
         }
 
         private void UpdateDataGridColor(GridCellsAppearance settings)
@@ -91,6 +108,8 @@ namespace TSBExport_CSharp
             dataGridBindingSource.DataSource = gridSettings.getActualData();
             dataGridView1.Refresh();
             UpdateDataGridColor(currentGridCellsAppearance);
+            UpdateDataGridFormat();
+            BindFormatChangeEvent();
             dataGridView1.ClearSelection();
             ResumeLayout(true);
         }
@@ -173,6 +192,21 @@ namespace TSBExport_CSharp
                     e.Cancel = true;
                     break;
             }
+        }
+
+        private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            /*
+            if (e.RowIndex == 0)
+            {
+                e.PaintBackground(e.CellBounds, true);
+                TextRenderer.DrawText(e.Graphics, "TEST",
+                    e.CellStyle.Font, e.CellBounds, e.CellStyle.ForeColor,
+                    TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
+                e.Handled = true;
+            }
+            */
+            //Console.WriteLine($"Row = {e.RowIndex}, Col = {e.ColumnIndex}, Value = {e.Value}");
         }
     }
 

@@ -32,6 +32,4 @@ namespace TSBExport_CSharp
             Application.Run(frmMain);
         }
     }
-
-    // the class responsible for reading and writing the settings
 }
