@@ -4,7 +4,7 @@ using System.Data;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
-namespace TSBExport_CSharp
+namespace TSBExport_CSharp.Grid
 {
     [DataContract]
     public class GridColumn

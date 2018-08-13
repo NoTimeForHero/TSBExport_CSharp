@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace TSBExport_CSharp
+namespace TSBExport_CSharp.Grid
 {
     public class GridCellsAppearance
     {

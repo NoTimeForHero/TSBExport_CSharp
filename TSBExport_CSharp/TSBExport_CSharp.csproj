@@ -79,10 +79,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Logic\Data\GridColumn.cs" />
-    <Compile Include="Logic\Data\GridSettings.cs" />
+    <Compile Include="Logic\Grid\GridColumn.cs" />
+    <Compile Include="Logic\Grid\GridSettings.cs" />
     <Compile Include="Logic\Other\UnknownTypeException.cs" />
-    <Compile Include="Logic\Data\GridCellsAppearance.cs" />
+    <Compile Include="Logic\Grid\GridCellsAppearance.cs" />
     <EmbeddedResource Include="GUI\Forms\FormGenerate.resx">
       <DependentUpon>FormGenerate.cs</DependentUpon>
     </EmbeddedResource>
