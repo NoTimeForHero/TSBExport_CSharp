@@ -18,14 +18,15 @@ namespace TSBExport_CSharp
 
             ts.columns.AddRange(new[] {
                 new GridColumn("{row}."),
-                new GridColumn("Example Text\nWith multiline support\nIn DataGridView Cell"),
-                new GridColumn(50, 8000),
+                new GridColumn("Example Text"),
+                new GridColumn(10000, 99999),
                 new GridColumn(new DateTime(2010, 1, 1), new DateTime(2020, 12, 30)),
                 new GridColumn(new DateTime(2010, 1, 1, 0, 0, 0), new DateTime(2010, 1, 1, 23, 59, 59)),
                 new GridColumn(10000d, 99999d)
             });
 
             settings.GridSettings = ts;
+            settings.CurrentApperance = "Standart";
             settings.Save();
         }
 
@@ -52,12 +53,7 @@ namespace TSBExport_CSharp
                 bindingSource.ResumeBinding();
             }));
 
-            menu.DropDownItems.Add(Decorator.CreateCheckboxToolStrip(true, "Multiline", on =>
-            {
-                MessageBox.Show("Not Implemented Yet!", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }));
-
-            menu.DropDownItems.Add(Decorator.CreateCheckboxToolStrip(false, "Selector", on => dataGridView.RowHeadersVisible = on));
+            menu.DropDownItems.Add(Decorator.CreateCheckboxToolStrip(false, "Selector", isVisible => dataGridView.RowHeadersVisible = isVisible));
 
             menu.DropDownItems.Add(Decorator.CreateButtonToolStrip("Data Format", (sender, args) =>
             {

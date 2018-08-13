@@ -8,8 +8,15 @@ namespace TSBExport_CSharp
 {
     public partial class FormMain : Form
     {
+        public List<GridCellsAppearance> viewSettings = new List<GridCellsAppearance>();
+
+        public GridCellsAppearance currentGridCellsAppearance
+        {
+            get => viewSettings.FirstOrDefault(x => x.name == settings.CurrentApperance);
+            set => settings.CurrentApperance = value.name;
+        }
+
         protected GridSettings gridSettings;
-        protected List<GridCellsAppearance> viewSettings = new List<GridCellsAppearance>();
         protected BindingSource dataGridBindingSource = new BindingSource();
         protected ConfigSettings settings;
 
@@ -24,13 +31,12 @@ namespace TSBExport_CSharp
             this.settings = settings;
             this.gridSettings = settings.GridSettings;
             InitializeComponent();
-            RebuildDataGrid();
         }
 
         private void UpdateDataGridColor(GridCellsAppearance settings)
         {
             if (settings == null) return;
-            gridSettings.currentGridCellsAppearance = settings;
+            currentGridCellsAppearance = settings;
             if (dataGridView1.Rows.Count < 1) return;
 
             int countCols = dataGridView1.ColumnCount;
@@ -54,6 +60,9 @@ namespace TSBExport_CSharp
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            if (settings.WindowLocation.HasValue) Location = settings.WindowLocation.Value;
+            if (settings.WindowSize.HasValue) Size = settings.WindowSize.Value;
+
             dataGridView1.ColumnHeadersVisible = false; // Hide real headers
             dataGridView1.RowHeadersVisible = false; // Hide left system column before first data
             dataGridView1.ReadOnly = false; // Not allowed to edit values
@@ -66,8 +75,11 @@ namespace TSBExport_CSharp
             AddTableControls?.Invoke(this, toolStrip_Table, dataGridView1, dataGridBindingSource);
             AddStyles?.Invoke(viewSettings);
 
-            var defaultStyle = viewSettings.FirstOrDefault();
-            if (defaultStyle != null) UpdateDataGridColor(defaultStyle);
+            RebuildDataGrid();
+
+            for (int i = 0; settings.ColumnsWidth != null && i < dataGridView1.ColumnCount && i < settings.ColumnsWidth.Count; i++)
+                dataGridView1.Columns[i].Width = settings.ColumnsWidth[i];
+
             FormMain_ResizeBegin(null, null);
             Form1_ResizeEnd(null, null);
         }
@@ -77,7 +89,7 @@ namespace TSBExport_CSharp
             SuspendLayout();
             dataGridBindingSource.DataSource = gridSettings.getActualData();
             dataGridView1.Refresh();
-            UpdateDataGridColor(gridSettings.currentGridCellsAppearance);
+            UpdateDataGridColor(currentGridCellsAppearance);
             dataGridView1.ClearSelection();
             ResumeLayout(true);
         }
@@ -143,6 +155,11 @@ namespace TSBExport_CSharp
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            settings.ColumnsWidth = dataGridView1.Columns.OfType<DataGridViewColumn>().Select(x => x.Width).ToList();
+            settings.WindowLocation = Location;
+            settings.WindowSize = Size;
+            settings.Save();
+
             if (settings.GridSettings.Equals(gridSettings)) return;
             var result = MessageBox.Show("Do you want save changes?", "Question", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
             switch (result)

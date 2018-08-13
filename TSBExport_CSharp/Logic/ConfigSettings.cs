@@ -1,17 +1,45 @@
-﻿using System.Configuration;
+﻿using System.Collections.Generic;
+using System.Configuration;
+using System.Drawing;
 
 namespace TSBExport_CSharp
 {
-    // TODO: Refactor this to manual (de/se)rialization with color parametered constructor support (perfomance improvment and more clean code)
     [SettingsSerializeAs(SettingsSerializeAs.Xml)]
     public sealed class ConfigSettings : ApplicationSettingsBase
     {
         [UserScopedSetting]
-        [SettingsSerializeAs(SettingsSerializeAs.Xml)]
         public GridSettings GridSettings
         {
-            get { return (GridSettings)this[nameof(GridSettings)]; }
-            set { this[nameof(GridSettings)] = value; }
+            get => (GridSettings)this[nameof(GridSettings)];
+            set => this[nameof(GridSettings)] = value;
+        }
+
+        [UserScopedSetting]
+        public Point? WindowLocation
+        {
+            get => (Point?)this[nameof(WindowLocation)];
+            set => this[nameof(WindowLocation)] = value;
+        }
+
+        [UserScopedSetting]
+        public Size? WindowSize
+        {
+            get => (Size?)this[nameof(WindowSize)];
+            set => this[nameof(WindowSize)] = value;
+        }
+
+        [UserScopedSetting]
+        public List<int> ColumnsWidth
+        {
+            get => (List<int>)this[nameof(ColumnsWidth)];
+            set => this[nameof(ColumnsWidth)] = value;
+        }
+
+        [UserScopedSetting]
+        public string CurrentApperance
+        {
+            get => (string)this[nameof(CurrentApperance)];
+            set => this[nameof(CurrentApperance)] = value;
         }
     }
 }

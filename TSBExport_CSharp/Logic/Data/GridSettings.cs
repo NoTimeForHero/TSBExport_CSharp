@@ -12,10 +12,6 @@ namespace TSBExport_CSharp
         public int rndSeed = 0;
         public int records = 0;
 
-        [IgnoreDataMember]
-        [XmlIgnore]
-        public GridCellsAppearance currentGridCellsAppearance;
-
         public List<GridColumn> columns = new List<GridColumn>();
 
         public DataTable getActualData()

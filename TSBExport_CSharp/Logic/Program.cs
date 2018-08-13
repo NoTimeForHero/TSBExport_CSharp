@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.IO;
 using System.Security.Permissions;
 using System.Windows.Forms;
@@ -24,6 +25,9 @@ namespace TSBExport_CSharp
             FormMain frmMain = new FormMain(settings);
             frmMain.AddTableControls += DefaultData.AddTableControls;
             frmMain.AddStyles += DefaultData.AddStyles;
+
+            var path = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+            Console.WriteLine("CONFIGURATION: " + path);
 
             Application.Run(frmMain);
         }
