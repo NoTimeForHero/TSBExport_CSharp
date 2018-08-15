@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TSBExport_CSharp
+namespace TSBExport_CSharp.GUI.Controls
 {
     public class MaskedTextBoxWithBorder : MaskedTextBox
     {

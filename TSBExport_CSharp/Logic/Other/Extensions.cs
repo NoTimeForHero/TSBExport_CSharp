@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TSBExport_CSharp
+namespace TSBExport_CSharp.Other
 {
     public static class Extensions
     {

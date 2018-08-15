@@ -236,7 +236,7 @@ namespace TSBExport_CSharp.GUI.Controls
         {
             for (int x = 0; x < ColumnCount; x++)
             {
-                for (int y = HeaderIndex+1; y < FooterIndex-1; y++)
+                for (int y = HeaderIndex+1; y < FooterIndex; y++)
                 {
                     Rows[y].Cells[x].Style = colorize(x, y - HeaderHeight);
                 }

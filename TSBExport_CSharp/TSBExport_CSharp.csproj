@@ -50,7 +50,7 @@
     <Compile Include="GUI\Controls\ExtendedDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Logic\ConfigSettings.cs" />
+    <Compile Include="Logic\Other\ConfigSettings.cs" />
     <Compile Include="Logic\Other\Decorator.cs" />
     <Compile Include="Logic\DefaultData.cs" />
     <Compile Include="Logic\Other\Extensions.cs" />

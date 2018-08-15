@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace TSBExport_CSharp
+namespace TSBExport_CSharp.Other
 {
     public class Decorator
     {

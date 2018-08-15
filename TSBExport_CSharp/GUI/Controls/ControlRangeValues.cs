@@ -13,8 +13,9 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TSBExport_CSharp.Other;
 
-namespace TSBExport_CSharp
+namespace TSBExport_CSharp.GUI.Controls
 {
     [SuppressMessage("ReSharper", "ArrangeAccessorOwnerBody")] // Visual Studio has a strange bug with lambda expression getter
     public partial class ControlRangeValues : UserControl

@@ -3,7 +3,7 @@ using System.Configuration;
 using System.Drawing;
 using TSBExport_CSharp.Grid;
 
-namespace TSBExport_CSharp
+namespace TSBExport_CSharp.Other
 {
     [SettingsSerializeAs(SettingsSerializeAs.Xml)]
     public sealed class ConfigSettings : ApplicationSettingsBase

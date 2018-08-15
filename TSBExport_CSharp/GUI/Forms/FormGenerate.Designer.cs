@@ -1,4 +1,6 @@
-﻿namespace TSBExport_CSharp
+﻿using TSBExport_CSharp.GUI.Controls;
+
+namespace TSBExport_CSharp
 {
     partial class FormGenerate
     {

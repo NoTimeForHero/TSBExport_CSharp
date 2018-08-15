@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TSBExport_CSharp
+namespace TSBExport_CSharp.Other
 {
     public class UnknownTypeException : Exception
     {
