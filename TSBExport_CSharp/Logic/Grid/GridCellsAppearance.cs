@@ -7,6 +7,7 @@ namespace TSBExport_CSharp.Grid
     {
         public string name = "Default Style";
 
+        public Color gridColor = Color.DarkGoldenrod;
         public DataGridViewCellStyle styleHeader = Decorator.MakeStyle(Color.Black, Color.White);
         public DataGridViewCellStyle styleFooter = Decorator.MakeStyle(Color.Black, Color.White);
 

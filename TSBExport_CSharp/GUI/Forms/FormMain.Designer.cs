@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dataGridView1 = new TSBExport_CSharp.GUI.Controls.ExtendedDataGridView();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip_Generate = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,7 +51,7 @@
             this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dataGridView1.Size = new System.Drawing.Size(794, 357);
             this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridView1_CellPainting);
+            this.dataGridView1.VirtualMode = true;
             // 
             // menuStrip1
             // 
@@ -163,7 +163,7 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private TSBExport_CSharp.GUI.Controls.ExtendedDataGridView dataGridView1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStrip_Exit;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;

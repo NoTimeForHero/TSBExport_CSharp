@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using TSBExport_CSharp.Grid;
+using TSBExport_CSharp.GUI.Controls;
 
 namespace TSBExport_CSharp
 {
@@ -23,7 +25,7 @@ namespace TSBExport_CSharp
         private GridSettings gridSettings;
 
         public delegate void OnAddStyles(List<GridCellsAppearance> viewSettings);
-        public delegate void OnAddTableControls(FormMain parent, ToolStripMenuItem menu, DataGridView dataGridView, BindingSource bindingSource);
+        public delegate void OnAddTableControls(FormMain parent, ToolStripMenuItem menu, ExtendedDataGridView dataGridView, BindingSource bindingSource);
 
         public OnAddTableControls AddTableControls;
         public OnAddStyles AddStyles;
@@ -38,7 +40,7 @@ namespace TSBExport_CSharp
         private void UpdateDataGridFormat()
         {
             for (int i = 0; i < dataGridView1.ColumnCount && i < gridSettings.columns.Count; i++)
-            { 
+            {
                 dataGridView1.Columns[i].DefaultCellStyle.Format = gridSettings.columns[i].Format;
             }
         }
@@ -57,22 +59,14 @@ namespace TSBExport_CSharp
             currentGridCellsAppearance = settings;
             if (dataGridView1.Rows.Count < 1) return;
 
-            int countCols = dataGridView1.ColumnCount;
-            int countRow = dataGridView1.RowCount;
-
             // Setting style for header and footer
-            dataGridView1.Rows[0].DefaultCellStyle = settings.styleHeader;
-            dataGridView1.Rows[countRow-1].DefaultCellStyle = settings.styleFooter;
+            dataGridView1.HeaderStyle = settings.styleHeader;
+            dataGridView1.FooterStyle = settings.styleFooter;
+            dataGridView1.GridColor = settings.gridColor;
 
             if (settings.colorize != null)
             {
-                for (int x = 0; x<countCols; x++)
-                {
-                    for (int y = 1; y < countRow-1; y++)
-                    {
-                        dataGridView1.Rows[y].Cells[x].Style = settings.colorize(x, y-1);
-                    }
-                }
+                dataGridView1.Colorize(settings.colorize);
             }
         }
 
@@ -88,15 +82,17 @@ namespace TSBExport_CSharp
             dataGridView1.EditMode = DataGridViewEditMode.EditProgrammatically; // No way to edit row
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect; // Select full row instead one cell
             dataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.True; // Allow multilining
-            dataGridView1.DataSource = dataGridBindingSource;
 
             AddTableControls?.Invoke(this, toolStrip_Table, dataGridView1, dataGridBindingSource);
             AddStyles?.Invoke(viewSettings);
 
             RebuildDataGrid();
 
-            for (int i = 0; settings.ColumnsWidth != null && i < dataGridView1.ColumnCount && i < settings.ColumnsWidth.Count; i++)
-                dataGridView1.Columns[i].Width = settings.ColumnsWidth[i];
+            if (settings.ColumnsWidth != null)
+            {
+                for (int i = 0; i < dataGridView1.ColumnCount && i < settings.ColumnsWidth.Count; i++)
+                    dataGridView1.Columns[i].Width = settings.ColumnsWidth[i];
+            }
 
             FormMain_ResizeBegin(null, null);
             Form1_ResizeEnd(null, null);
@@ -105,12 +101,18 @@ namespace TSBExport_CSharp
         private void RebuildDataGrid()
         {
             SuspendLayout();
-            dataGridBindingSource.DataSource = gridSettings.getActualData();
+
+            DataTable dataTable = gridSettings.getActualData();
+            dataGridBindingSource.DataSource = dataTable;
+            dataGridView1.UpdateData(dataGridBindingSource);
             dataGridView1.Refresh();
+            dataGridView1.HeaderValues.AddRange(dataTable.Columns.Cast<DataColumn>().Select(x => x.Caption == "0" ? "#" : "Head_" + x.Caption));
+            dataGridView1.FooterValues.AddRange(dataTable.Columns.Cast<DataColumn>().Select(x => x.Caption == "0" ? "#" : "Foot_" + x.Caption));
             UpdateDataGridColor(currentGridCellsAppearance);
             UpdateDataGridFormat();
             BindFormatChangeEvent();
             dataGridView1.ClearSelection();
+
             ResumeLayout(true);
         }
 
@@ -192,21 +194,6 @@ namespace TSBExport_CSharp
                     e.Cancel = true;
                     break;
             }
-        }
-
-        private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
-        {
-            /*
-            if (e.RowIndex == 0)
-            {
-                e.PaintBackground(e.CellBounds, true);
-                TextRenderer.DrawText(e.Graphics, "TEST",
-                    e.CellStyle.Font, e.CellBounds, e.CellStyle.ForeColor,
-                    TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
-                e.Handled = true;
-            }
-            */
-            //Console.WriteLine($"Row = {e.RowIndex}, Col = {e.ColumnIndex}, Value = {e.Value}");
         }
     }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using TSBExport_CSharp.Grid;
+using TSBExport_CSharp.GUI.Controls;
 
 namespace TSBExport_CSharp
 {
@@ -31,29 +32,11 @@ namespace TSBExport_CSharp
             settings.Save();
         }
 
-        public static void AddTableControls(FormMain parent, ToolStripMenuItem menu, DataGridView dataGridView, BindingSource bindingSource)
+        public static void AddTableControls(FormMain parent, ToolStripMenuItem menu, ExtendedDataGridView dataGridView, BindingSource bindingSource)
         {
 
-            menu.DropDownItems.Add(Decorator.CreateCheckboxToolStrip(true, "Header", isVisible =>
-            {
-                bindingSource.SuspendBinding();
-                dataGridView.Rows[0].Visible = isVisible;
-                if (dataGridView.FirstDisplayedScrollingRowIndex < 2)
-                    dataGridView.FirstDisplayedScrollingRowIndex = isVisible ? 0 : 1; // Must be visible to scroll or exception throwed
-                bindingSource.ResumeBinding();
-            }));
-
-            menu.DropDownItems.Add(Decorator.CreateCheckboxToolStrip(true, "Footer", isVisible =>
-            {
-                int lastRow = dataGridView.RowCount - 1; // Latest row index
-
-                bindingSource.SuspendBinding();
-                dataGridView.Rows[lastRow].Visible = isVisible;
-                if (dataGridView.FirstDisplayedScrollingRowIndex > lastRow - 2)
-                    dataGridView.FirstDisplayedScrollingRowIndex = isVisible ? lastRow : lastRow - 1; // Must be visible to scroll or exception throwed
-                bindingSource.ResumeBinding();
-            }));
-
+            menu.DropDownItems.Add(Decorator.CreateCheckboxToolStrip(true, "Header", isVisible => dataGridView.HeaderVisible = isVisible));
+            menu.DropDownItems.Add(Decorator.CreateCheckboxToolStrip(true, "Footer", isVisible => dataGridView.FooterVisible = isVisible));
             menu.DropDownItems.Add(Decorator.CreateCheckboxToolStrip(false, "Selector", isVisible => dataGridView.RowHeadersVisible = isVisible));
 
             menu.DropDownItems.Add(Decorator.CreateButtonToolStrip("Data Format", (sender, args) =>
@@ -157,7 +140,8 @@ namespace TSBExport_CSharp
                 name = "RAINBOW",
                 colorize = (x, y) => colors[y / rowsPerColor % colors.Count],
                 styleHeader = headersAndfooters,
-                styleFooter = headersAndfooters
+                styleFooter = headersAndfooters,
+                gridColor = Color.Azure
             });
 
 

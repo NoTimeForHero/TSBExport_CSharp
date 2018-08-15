@@ -35,10 +35,10 @@ namespace TSBExport_CSharp
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.cbType = new System.Windows.Forms.ComboBox();
-            this.mtbValue2 = new MaskedTextBoxWithBorder();
+            this.mtbValue2 = new TSBExport_CSharp.MaskedTextBoxWithBorder();
             this.chkRandom = new System.Windows.Forms.CheckBox();
             this.labelInfo = new System.Windows.Forms.Label();
-            this.mtbValue1 = new MaskedTextBoxWithBorder();
+            this.mtbValue1 = new TSBExport_CSharp.MaskedTextBoxWithBorder();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
