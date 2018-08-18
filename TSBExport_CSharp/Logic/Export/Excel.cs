@@ -4,21 +4,25 @@ using System.Threading.Tasks;
 using Microsoft.Office.Interop.Excel;
 using TSBExport_CSharp.Grid;
 using TSBExport_CSharp.Other;
+using Action = System.Action;
 using Application = Microsoft.Office.Interop.Excel.Application;
 
 namespace TSBExport_CSharp.Logic.Export
 {
-    class ToExcel : IDisposable
+    class ToExcel
     {
-        private readonly Workbook book;
-        private readonly Application app;
-        private readonly Worksheet worksheet;
+        private Workbook book;
+        private Application app;
+        private Worksheet worksheet;
 
         private dynamic Cells => worksheet.Cells;
         private dynamic Columns => worksheet.Columns;
 
         private readonly GridDataTable data;
         private int headerLen;
+
+        public CancellationToken cancellationToken;
+        public event Action<string, int, int> OnStateChanged;
 
         public bool Visible
         {
@@ -29,33 +33,39 @@ namespace TSBExport_CSharp.Logic.Export
         public ToExcel(GridDataTable data)
         {
             this.data = data ?? throw new ArgumentNullException(nameof(data));
-
-            app = new Application();
-            app.Visible = false;
-            book = app.Workbooks.Add();
-            worksheet = app.Worksheets.Add();
         }
 
-        public async Task AsyncFill()
+        public async Task AsyncCreate(int updateInterval=20)
         {
             await Task.Run(() =>
             {
+                app = new Application();
+                app.Visible = false;
+                book = app.Workbooks.Add();
+                worksheet = app.Worksheets.Add();
+
                 int columns = data.Columns.Count;
                 int rows = data.Rows.Count;
 
+                OnStateChanged?.Invoke("Making headers", -1, -1);
                 headerLen = makeHeader(1, columns);
-                makeValues(headerLen + 1, rows, columns);
+                makeValues(headerLen + 1, rows, columns, updateInterval);
                 makeFooter(headerLen + rows + 1, columns);
-                Thread.Sleep(1000);
+
+                OnStateChanged?.Invoke("Worksheet finished!", 0, 0);
             });
         }
 
-        public async Task AsyncColorize(GridCellsAppearance appearance)
+        public async Task AsyncColorize(GridCellsAppearance appearance, int updateInterval=10)
         {
-            await Task.Run(() => _colorizeValues(appearance, 1));
+            if (app == null) throw new NullReferenceException("Trying to colorize on NULL Excel.Application!");
+            if (book == null) throw new NullReferenceException("Trying to colorize on NULL Excel.WorkBook!");
+            if (worksheet == null) throw new NullReferenceException("Trying to colorize on NULL Excel.WorkSheet!");
+
+            await Task.Run(() => _colorizeValues(appearance, 1, updateInterval));
         }
 
-        private void _colorizeValues(GridCellsAppearance appearance, int startY)
+        private void _colorizeValues(GridCellsAppearance appearance, int startY, int updateInterval)
         {
             if (appearance.colorize == null) return;
             if (data.Columns.Count < 1) return;
@@ -88,17 +98,33 @@ namespace TSBExport_CSharp.Logic.Export
                     range.Interior.Color = style.BackColor;
                     range.Font.Color = style.ForeColor;
                 }
+
+                if (OnStateChanged != null && updateInterval > 0 && y % updateInterval == 0)
+                    OnStateChanged.Invoke($"Current colorized: {y}/{rows}", y, rows);
+                cancellationToken.ThrowIfCancellationRequested();
             }
+
+            OnStateChanged?.Invoke("Colorized finished!", 0, 0);
         }
 
-        private void makeValues(int beginY, int rows, int columns)
+        private void makeValues(int beginY, int rows, int columns, int updateInterval)
         {
             if (columns < 1) return;
             // VALUES
             Range range = worksheet.Range[Cells[beginY, 1], Cells[beginY + rows - 1, columns]];
             range.Borders.LineStyle = XlLineStyle.xlContinuous;
             range.Borders.Weight = XlBorderWeight.xlThin;
-            range.Value = data.ToExcelArray();
+
+            if (OnStateChanged == null || updateInterval < 1)
+            {
+                range.Value = data.ToExcelArray();
+                return;
+            }
+
+            Action<int, int> actionGUI = (current, max) => OnStateChanged.Invoke($"Filling Rows: {current}/{max}", current, max);
+            Action<int, int> actionThrow = (a, b) => cancellationToken.ThrowIfCancellationRequested();
+
+            range.Value = data.ToExcelArray(updateInterval, actionGUI + actionThrow);
         }
 
         private void makeFooter(int startY, int columns)
@@ -155,17 +181,8 @@ namespace TSBExport_CSharp.Logic.Export
             return y - startY;
         }
 
-
-        ~ToExcel()
+        public void ForceClose()
         {
-            Dispose();
-        }
-
-        protected bool disposed;
-        public void Dispose()
-        {
-            if (disposed) return;
-
             // IF EXCEL ALREADY CLOSED BY USER
             try
             {
@@ -178,7 +195,6 @@ namespace TSBExport_CSharp.Logic.Export
             }
 
             app.Quit();
-            disposed = true;
         }
     }
 }

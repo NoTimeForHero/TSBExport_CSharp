@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TSBExport_CSharp.Grid;
 using TSBExport_CSharp.GUI.Controls;
+using TSBExport_CSharp.GUI.Forms;
 using TSBExport_CSharp.Logic.Export;
 using TSBExport_CSharp.Other;
 
@@ -15,20 +18,42 @@ namespace TSBExport_CSharp
     {
         public static async void ExportExcel(Form sender, GridDataTable data, GridCellsAppearance style)
         {
+            ToExcel excel = new ToExcel(data);
             try
             {
-                ToExcel excel = new ToExcel(data);
-                await excel.AsyncFill();
-                excel.Visible = true;
+                CancellationTokenSource token = new CancellationTokenSource();
+                DialogExport dialog = new DialogExport();
+                dialog.FormClosing += (s, ev) => token.Cancel();
+                dialog.ButtonCancelClick += () =>
+                {
+                    token.Cancel();
+                    dialog.Close();
+                };
+                dialog.Show(sender);
+
+                excel.cancellationToken = token.Token;
+                excel.OnStateChanged += dialog.setStatus;
+
+                await excel.AsyncCreate();
 
                 if (style != null)
-                    await excel.AsyncColorize(style);
+                    await excel.AsyncColorize(style,1);
 
-                MessageBox.Show(sender, "SUCCESS", String.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                dialog.Close();
+                excel.Visible = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show(sender, "FAILED!", String.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                excel.ForceClose();
+
+                bool shouldThrow = !(ex is OperationCanceledException);
+                if (ex is COMException exCom)
+                {
+                    MessageBox.Show(sender, "Excel Error Occured: " + exCom.Message, String.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    shouldThrow = false;
+                }
+
+                if (shouldThrow) throw;
             }
         }
 

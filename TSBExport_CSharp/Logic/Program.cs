@@ -47,7 +47,7 @@ namespace TSBExport_CSharp
 
             var rainbow = styles.FirstOrDefault(x => x.name.Equals("RAINBOW"));
             ToExcel test = new ToExcel(data);
-            test.AsyncFill().Wait();
+            test.AsyncCreate().Wait();
             test.Visible = true;
         }
     }

@@ -50,6 +50,12 @@
     <Compile Include="GUI\Controls\ExtendedDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="GUI\Forms\DialogExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Forms\DialogExport.Designer.cs">
+      <DependentUpon>DialogExport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Logic\Export\Excel.cs" />
     <Compile Include="Logic\Grid\GridDataTable.cs">
       <SubType>Component</SubType>
@@ -90,6 +96,9 @@
     <Compile Include="Logic\Grid\GridSettings.cs" />
     <Compile Include="Logic\Other\UnknownTypeException.cs" />
     <Compile Include="Logic\Grid\GridCellsAppearance.cs" />
+    <EmbeddedResource Include="GUI\Forms\DialogExport.resx">
+      <DependentUpon>DialogExport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\Forms\FormGenerate.resx">
       <DependentUpon>FormGenerate.cs</DependentUpon>
     </EmbeddedResource>

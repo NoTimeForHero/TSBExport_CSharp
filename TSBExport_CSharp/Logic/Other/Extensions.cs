@@ -30,13 +30,11 @@ namespace TSBExport_CSharp.Other
                     result[y, x] = data.Rows[y][x];
                 }
 
-                if (interval > 0)
-                {
+                if (interval > 0 && y % interval == 0)
                     callback?.Invoke(y,rows);
-                    Thread.Sleep(20);
-                }
             }
 
+            callback?.Invoke(rows, rows);
             return result;
         }
 
