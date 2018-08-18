@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using TSBExport_CSharp.Other;
@@ -15,9 +16,9 @@ namespace TSBExport_CSharp.Grid
 
         public List<GridColumn> columns = new List<GridColumn>();
 
-        public DataTable getActualData()
+        public GridDataTable getActualData()
         {
-            DataTable data = new DataTable();
+            GridDataTable data = new GridDataTable();
 
             for (int i = 0; i < columns.Count; i++)
             {

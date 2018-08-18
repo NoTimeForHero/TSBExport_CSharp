@@ -1,15 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using TSBExport_CSharp.Grid;
 using TSBExport_CSharp.GUI.Controls;
+using TSBExport_CSharp.Logic.Export;
 using TSBExport_CSharp.Other;
 
 namespace TSBExport_CSharp
 {
     public static class DefaultData
     {
+        public static async void ExportExcel(Form sender, GridDataTable data, GridCellsAppearance style)
+        {
+            try
+            {
+                ToExcel excel = new ToExcel(data);
+                await excel.AsyncFill();
+                excel.Visible = true;
+
+                if (style != null)
+                    await excel.AsyncColorize(style);
+
+                MessageBox.Show(sender, "SUCCESS", String.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(sender, "FAILED!", String.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         public static void InitTableSettings(ConfigSettings settings)
         {

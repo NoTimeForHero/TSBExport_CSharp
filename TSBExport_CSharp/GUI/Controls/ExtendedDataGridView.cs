@@ -47,8 +47,8 @@ namespace TSBExport_CSharp.GUI.Controls
             this.bindingSrc = bindingSrc;
             dataTable = (DataTable)bindingSrc.DataSource;
             if (dataTable == null) throw new ArgumentException("BindingSource DataSource must be DataTable!");
-            ColumnCount = bindingSrc.GetItemProperties(null).Count;
             RowCount = bindingSrc.Count + HeaderHeight + FooterHeight;
+            ColumnCount = bindingSrc.GetItemProperties(null).Count;
         }
 
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
@@ -57,15 +57,21 @@ namespace TSBExport_CSharp.GUI.Controls
             get => RowCount > HeaderHeight && Rows[HeaderIndex].Visible;
             set
             {
+                if (RowCount <= HeaderHeight) return;
                 Rows[HeaderIndex].Visible = value;
                 if (FirstDisplayedScrollingRowIndex < 2) FirstDisplayedScrollingRowIndex = value ? HeaderIndex : HeaderIndex+1;
             }
         }
 
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
-        public bool FooterVisible {
+        public bool FooterVisible
+        {
             get => RowCount > FooterHeight && Rows[FooterIndex].Visible;
-            set => Rows[FooterIndex].Visible = value;
+            set
+            {
+                if (RowCount <= HeaderHeight) return;
+                Rows[FooterIndex].Visible = value;
+            }
         }
 
         private DataGridViewCellStyle _headerStyle;
@@ -102,6 +108,8 @@ namespace TSBExport_CSharp.GUI.Controls
 
         private void Event_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
+            if (e.ColumnIndex > ColumnCount) return;
+
             if (e.RowIndex == HeaderIndex)
             {
                 if (HeaderValues.Count > e.ColumnIndex)
@@ -116,7 +124,10 @@ namespace TSBExport_CSharp.GUI.Controls
                 return;
             }
 
-            e.Value = dataTable.Rows[e.RowIndex - HeaderHeight][e.ColumnIndex];
+            int RowIndex = e.RowIndex - HeaderHeight;
+            if (RowIndex > RowCount) return;
+
+            e.Value = dataTable.Rows[RowIndex][e.ColumnIndex];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

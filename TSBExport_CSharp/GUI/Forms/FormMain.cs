@@ -23,13 +23,16 @@ namespace TSBExport_CSharp
 
         private readonly BindingSource dataGridBindingSource = new BindingSource();
         private readonly ConfigSettings settings;
+        private GridDataTable dataTable;
         private GridSettings gridSettings;
 
         public delegate void OnAddStyles(List<GridCellsAppearance> viewSettings);
         public delegate void OnAddTableControls(FormMain parent, ToolStripMenuItem menu, ExtendedDataGridView dataGridView, BindingSource bindingSource);
+        public delegate void OnExportExcel(Form host, GridDataTable data, GridCellsAppearance style);
 
         public OnAddTableControls AddTableControls;
         public OnAddStyles AddStyles;
+        public OnExportExcel ExportExcel;
 
         public FormMain(ConfigSettings settings)
         {
@@ -102,18 +105,16 @@ namespace TSBExport_CSharp
         private void RebuildDataGrid()
         {
             SuspendLayout();
-
-            DataTable dataTable = gridSettings.getActualData();
+            dataTable = gridSettings.getActualData();
             dataGridBindingSource.DataSource = dataTable;
             dataGridView1.UpdateData(dataGridBindingSource);
             dataGridView1.Refresh();
-            dataGridView1.HeaderValues.AddRange(dataTable.Columns.Cast<DataColumn>().Select(x => x.Caption == "0" ? "#" : "Head_" + x.Caption));
-            dataGridView1.FooterValues.AddRange(dataTable.Columns.Cast<DataColumn>().Select(x => x.Caption == "0" ? "#" : "Foot_" + x.Caption));
+            dataGridView1.HeaderValues.AddRange(dataTable.Headers);
+            dataGridView1.FooterValues.AddRange(dataTable.Footers);
             UpdateDataGridColor(currentGridCellsAppearance);
             UpdateDataGridFormat();
             BindFormatChangeEvent();
             dataGridView1.ClearSelection();
-
             ResumeLayout(true);
         }
 
@@ -195,6 +196,16 @@ namespace TSBExport_CSharp
                     e.Cancel = true;
                     break;
             }
+        }
+
+        private void toolStrip_excel_Click(object sender, EventArgs e)
+        {
+            if (!(sender is ToolStripMenuItem toolStrip)) return;
+
+            GridCellsAppearance style = null;
+            if (toolStrip == toolStrip_excel) style = currentGridCellsAppearance;
+
+            ExportExcel(this, dataTable, style);
         }
     }
 
