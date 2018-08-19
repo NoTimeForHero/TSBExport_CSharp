@@ -66,6 +66,19 @@ namespace TSBExport_CSharp.GUI.Controls
             }
         }
 
+        private bool _multiline = true;
+
+        public bool Multiline
+        {
+            get => _multiline;
+            set
+            {
+                bool old_value = _multiline;
+                _multiline = value;
+                if (old_value != value) Refresh();
+            }
+        }
+
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public bool FooterVisible
         {
@@ -130,7 +143,15 @@ namespace TSBExport_CSharp.GUI.Controls
             int RowIndex = e.RowIndex - HeaderHeight;
             if (RowIndex > RowCount) return;
 
-            e.Value = dataTable.Rows[RowIndex][e.ColumnIndex];
+            object value = dataTable.Rows[RowIndex][e.ColumnIndex];
+
+            if (!Multiline && value is string s)
+            {
+                int newLineIndex = s.IndexOf('\n');
+                if (newLineIndex >= 0) value = s.Substring(0, newLineIndex);
+            }
+
+            e.Value = value;
         }
 
         public void ColumnsAutoFit()

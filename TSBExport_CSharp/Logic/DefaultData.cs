@@ -70,11 +70,12 @@ namespace TSBExport_CSharp
 
             ts.columns.AddRange(new[] {
                 new GridColumn("{row}."),
-                new GridColumn("Example{n}Multiline{n}Text"),
-                new GridColumn(10000d, 99999d, "N3"),
+                new GridColumn("Text Line {row}{n}Multiline Data"),
+                new GridColumn(10000d, 99999d, "N4"),
                 new GridColumn(10000, 99999),
-                new GridColumn(new DateTime(2010, 1, 1), new DateTime(2020, 12, 30), "dd MMMM yyyy, dddd"),
-                new GridColumn(new DateTime(2010, 1, 1, 0, 0, 0), new DateTime(2010, 1, 1, 23, 59, 59), "HH:mm:ss")
+                new GridColumn(new DateTime(2010, 1, 1), new DateTime(2020, 12, 30), "dd MMMM yyyy"),
+                new GridColumn(new DateTime(2010, 1, 1, 0, 0, 0), new DateTime(2010, 1, 1, 23, 59, 59), "HH:mm:ss"),
+                new GridColumn(new DateTime(2010, 1, 1, 0, 0, 0), new DateTime(2010, 1, 1, 23, 59, 59), "dddd")
             });
 
             settings.ForceThrowExcelExceptions = false;
@@ -89,6 +90,7 @@ namespace TSBExport_CSharp
             menu.DropDownItems.Add(Decorator.CreateCheckboxToolStrip(true, "Header", isVisible => dataGridView.HeaderVisible = isVisible));
             menu.DropDownItems.Add(Decorator.CreateCheckboxToolStrip(true, "Footer", isVisible => dataGridView.FooterVisible = isVisible));
             menu.DropDownItems.Add(Decorator.CreateCheckboxToolStrip(false, "Selector", isVisible => dataGridView.RowHeadersVisible = isVisible));
+            menu.DropDownItems.Add(Decorator.CreateCheckboxToolStrip(true, "Multiline", isEnabled => dataGridView.Multiline = isEnabled));
 
             menu.DropDownItems.Add(Decorator.CreateButtonToolStrip("Data Format", (sender, args) =>
             {
