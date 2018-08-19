@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using TSBExport_CSharp.Grid;
 using TSBExport_CSharp.GUI.Controls;
@@ -78,6 +79,7 @@ namespace TSBExport_CSharp
         {
             if (settings.WindowLocation.HasValue) Location = settings.WindowLocation.Value;
             if (settings.WindowSize.HasValue) Size = settings.WindowSize.Value;
+            Text = Text + " (Version " + Assembly.GetExecutingAssembly().GetName().Version + ")";
 
             dataGridView1.ColumnHeadersVisible = false; // Hide real headers
             dataGridView1.RowHeadersVisible = false; // Hide left system column before first data
