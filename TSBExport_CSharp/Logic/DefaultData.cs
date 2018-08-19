@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +19,7 @@ namespace TSBExport_CSharp
 {
     public static class DefaultData
     {
-        public static async void ExportExcel(Form sender, GridDataTable data, GridCellsAppearance style)
+        public static async void ExportExcel(Form sender, GridDataTable data, GridCellsAppearance style, bool throwAnyway)
         {
             ToExcel excel = new ToExcel(data);
             try
@@ -53,7 +56,7 @@ namespace TSBExport_CSharp
                     shouldThrow = false;
                 }
 
-                if (shouldThrow) throw;
+                if (shouldThrow || throwAnyway) throw;
             }
         }
 
@@ -67,12 +70,14 @@ namespace TSBExport_CSharp
 
             ts.columns.AddRange(new[] {
                 new GridColumn("{row}."),
+                new GridColumn("Example{n}Multiline{n}Text"),
                 new GridColumn(10000d, 99999d, "N3"),
                 new GridColumn(10000, 99999),
                 new GridColumn(new DateTime(2010, 1, 1), new DateTime(2020, 12, 30), "dd MMMM yyyy, dddd"),
                 new GridColumn(new DateTime(2010, 1, 1, 0, 0, 0), new DateTime(2010, 1, 1, 23, 59, 59), "HH:mm:ss")
             });
 
+            settings.ForceThrowExcelExceptions = false;
             settings.GridSettings = ts;
             settings.CurrentApperance = "Standart";
             settings.Save();
@@ -129,6 +134,11 @@ namespace TSBExport_CSharp
                 dialog.Show(parent);
             }));
 
+            menu.DropDownItems.Add(Decorator.CreateButtonToolStrip("Config Folder", (sender, args) =>
+            {
+                var fullFilePath = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+                Process.Start("explorer.exe", Path.GetDirectoryName(fullFilePath));
+            }));
         }
 
         public static void AddStyles(List<GridCellsAppearance> viewSettings)

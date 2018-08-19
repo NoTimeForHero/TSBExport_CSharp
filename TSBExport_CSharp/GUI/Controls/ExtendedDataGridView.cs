@@ -45,10 +45,13 @@ namespace TSBExport_CSharp.GUI.Controls
         public void UpdateData(BindingSource bindingSrc)
         {
             this.bindingSrc = bindingSrc;
+            VirtualMode = false;
             dataTable = (DataTable)bindingSrc.DataSource;
             if (dataTable == null) throw new ArgumentException("BindingSource DataSource must be DataTable!");
             RowCount = bindingSrc.Count + HeaderHeight + FooterHeight;
             ColumnCount = bindingSrc.GetItemProperties(null).Count;
+            Console.WriteLine("CURRENT COLUMNS: " + ColumnCount);
+            VirtualMode = true;
         }
 
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
@@ -120,7 +123,7 @@ namespace TSBExport_CSharp.GUI.Controls
             if (e.RowIndex == FooterIndex)
             {
                 if (FooterValues.Count > e.ColumnIndex)
-                    e.Value = HeaderValues[e.ColumnIndex];
+                    e.Value = FooterValues[e.ColumnIndex];
                 return;
             }
 
@@ -128,6 +131,15 @@ namespace TSBExport_CSharp.GUI.Controls
             if (RowIndex > RowCount) return;
 
             e.Value = dataTable.Rows[RowIndex][e.ColumnIndex];
+        }
+
+        public void ColumnsAutoFit()
+        {
+            for (int i = 0; i < ColumnCount; i++)
+                Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            Columns[ColumnCount - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            for (int i = 0; i < ColumnCount; i++)
+                Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

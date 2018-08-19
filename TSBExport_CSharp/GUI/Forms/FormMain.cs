@@ -29,7 +29,7 @@ namespace TSBExport_CSharp
 
         public delegate void OnAddStyles(List<GridCellsAppearance> viewSettings);
         public delegate void OnAddTableControls(FormMain parent, ToolStripMenuItem menu, ExtendedDataGridView dataGridView, BindingSource bindingSource);
-        public delegate void OnExportExcel(Form host, GridDataTable data, GridCellsAppearance style);
+        public delegate void OnExportExcel(Form host, GridDataTable data, GridCellsAppearance style, bool throwAnyway);
 
         public OnAddTableControls AddTableControls;
         public OnAddStyles AddStyles;
@@ -68,6 +68,9 @@ namespace TSBExport_CSharp
             dataGridView1.HeaderStyle = settings.styleHeader;
             dataGridView1.FooterStyle = settings.styleFooter;
             dataGridView1.GridColor = settings.gridColor;
+
+            dataGridView1.DefaultCellStyle.SelectionBackColor = settings.selection.BackColor;
+            dataGridView1.DefaultCellStyle.SelectionForeColor = settings.selection.ForeColor;
 
             if (settings.colorize != null)
             {
@@ -113,6 +116,11 @@ namespace TSBExport_CSharp
             dataGridView1.Refresh();
             dataGridView1.HeaderValues.AddRange(dataTable.Headers);
             dataGridView1.FooterValues.AddRange(dataTable.Footers);
+
+            // AUTO FIT NEW DATA
+            dataGridView1.ColumnsAutoFit();
+            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+
             UpdateDataGridColor(currentGridCellsAppearance);
             UpdateDataGridFormat();
             BindFormatChangeEvent();
@@ -207,7 +215,7 @@ namespace TSBExport_CSharp
             GridCellsAppearance style = null;
             if (toolStrip == toolStrip_excel) style = currentGridCellsAppearance;
 
-            ExportExcel(this, dataTable, style);
+            ExportExcel(this, dataTable, style, settings.ForceThrowExcelExceptions);
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)

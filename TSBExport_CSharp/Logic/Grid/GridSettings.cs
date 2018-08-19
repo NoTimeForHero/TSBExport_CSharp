@@ -47,7 +47,10 @@ namespace TSBExport_CSharp.Grid
 
                 if (setting.type == typeof(String))
                 {
-                    row[j] = ((string)setting.Value1).Replace("{row}", index.ToString());
+                    string value = (string) setting.Value1;
+                    value = value.Replace("{row}", index.ToString());
+                    value = value.Replace("{n}", "\n");
+                    row[j] = value;
                     continue;
                 }
 

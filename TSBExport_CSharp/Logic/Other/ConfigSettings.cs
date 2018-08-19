@@ -42,5 +42,12 @@ namespace TSBExport_CSharp.Other
             get => (string)this[nameof(CurrentApperance)];
             set => this[nameof(CurrentApperance)] = value;
         }
+
+        [UserScopedSetting]
+        public bool ForceThrowExcelExceptions
+        {
+            get => (bool)this[nameof(ForceThrowExcelExceptions)];
+            set => this[nameof(ForceThrowExcelExceptions)] = value;
+        }
     }
 }

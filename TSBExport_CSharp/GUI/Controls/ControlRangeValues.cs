@@ -128,8 +128,8 @@ namespace TSBExport_CSharp.GUI.Controls
             chkRandom.Checked = _enabledRandomValue;
             cbType.SelectedItem = _valueType;
 
-            var span = _enabledRandomValue && _valueType != EnumValueType.String ? 2 : 1;
-            tableLayoutPanel1.SetColumnSpan(this.labelInfo, span);
+            var span = !_enabledRandomValue || _valueType == EnumValueType.String ? 2 : 1;
+            tableLayoutPanel1.SetColumnSpan(mtbValue1, span);
 
             mtbValue2.Visible = _enabledRandomValue && _valueType != EnumValueType.String;
 
@@ -152,7 +152,7 @@ namespace TSBExport_CSharp.GUI.Controls
                     mtbValue1.Mask = "";
                     mtbValue2.Mask = "";
 
-                    labelInfo.Text = "{row} - for current row";
+                    labelInfo.Text = "{row} - for current row, {n} - new line";
                     break;
                 case EnumValueType.Float:
                 case EnumValueType.Integer:
