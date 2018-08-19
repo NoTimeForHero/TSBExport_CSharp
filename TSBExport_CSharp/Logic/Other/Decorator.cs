@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace TSBExport_CSharp.Other
@@ -36,6 +37,14 @@ namespace TSBExport_CSharp.Other
         public static bool Chance(int chance)
         {
             return random.Next(0, 100) < chance;
+        }
+
+        public static string GetTempFileNameWithExt(string extension)
+        {
+            string fileName = Path.GetRandomFileName();
+            fileName = Path.ChangeExtension(fileName, extension);
+            fileName = Path.Combine(Path.GetTempPath(), fileName);
+            return fileName;
         }
 
         public static DataGridViewCellStyle MakeStyle(Color text, Color background, Font font = null)

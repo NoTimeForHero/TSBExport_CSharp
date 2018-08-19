@@ -30,17 +30,18 @@ namespace TSBExport_CSharp
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGenerate));
             this.panelFields = new System.Windows.Forms.Panel();
             this.panelExample = new System.Windows.Forms.Panel();
             this.protoFieldDelete = new System.Windows.Forms.Button();
-            this.protoField = new ControlRangeValues();
+            this.protoField = new TSBExport_CSharp.GUI.Controls.ControlRangeValues();
             this.buttonAddField = new System.Windows.Forms.Button();
             this.buttonExit = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.tbSeed = new MaskedTextBoxWithBorder();
-            this.tbRecords = new MaskedTextBoxWithBorder();
+            this.tbSeed = new TSBExport_CSharp.GUI.Controls.MaskedTextBoxWithBorder();
+            this.tbRecords = new TSBExport_CSharp.GUI.Controls.MaskedTextBoxWithBorder();
             this.panelFields.SuspendLayout();
             this.panelExample.SuspendLayout();
             this.SuspendLayout();
@@ -89,7 +90,7 @@ namespace TSBExport_CSharp
             this.protoField.TabIndex = 3;
             this.protoField.Text1 = null;
             this.protoField.Text2 = null;
-            this.protoField.ValueType = ControlRangeValues.EnumValueType.Date;
+            this.protoField.ValueType = TSBExport_CSharp.GUI.Controls.ControlRangeValues.EnumValueType.Date;
             // 
             // buttonAddField
             // 
@@ -188,6 +189,7 @@ namespace TSBExport_CSharp
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;

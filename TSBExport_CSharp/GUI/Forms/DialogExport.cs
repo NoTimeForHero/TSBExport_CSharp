@@ -43,9 +43,13 @@ namespace TSBExport_CSharp.GUI.Forms
             {
                 Invoke((Action<string, int, int>) _setStatus, text, value, max);
             }
-            catch (ObjectDisposedException)
+            catch (ObjectDisposedException ex)
             {
-                Console.WriteLine("ObjectDisposedException");
+                Console.WriteLine("ObjectDisposedException: " + ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine("InvalidOperationException: " + ex.Message);
             }
         }
 

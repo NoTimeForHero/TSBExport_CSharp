@@ -1,11 +1,21 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Office.Core;
 using Microsoft.Office.Interop.Excel;
 using TSBExport_CSharp.Grid;
 using TSBExport_CSharp.Other;
+using TSBExport_CSharp.Properties;
 using Action = System.Action;
 using Application = Microsoft.Office.Interop.Excel.Application;
+using XlBorderWeight = Microsoft.Office.Interop.Excel.XlBorderWeight;
+using XlHAlign = Microsoft.Office.Interop.Excel.XlHAlign;
 
 namespace TSBExport_CSharp.Logic.Export
 {
@@ -17,6 +27,7 @@ namespace TSBExport_CSharp.Logic.Export
 
         private dynamic Cells => worksheet.Cells;
         private dynamic Columns => worksheet.Columns;
+        private dynamic Rows => worksheet.Rows;
 
         private readonly GridDataTable data;
         private int headerLen;
@@ -52,8 +63,9 @@ namespace TSBExport_CSharp.Logic.Export
                 makeValues(headerLen + 1, rows, columns, updateInterval);
                 makeFooter(headerLen + rows + 1, columns);
 
+                InsertPicture(1, columns + 1, 2.5, 2.5);
                 OnStateChanged?.Invoke("Worksheet finished!", 0, 0);
-            });
+            }, cancellationToken);
         }
 
         public async Task AsyncColorize(GridCellsAppearance appearance, int updateInterval=10)
@@ -62,7 +74,7 @@ namespace TSBExport_CSharp.Logic.Export
             if (book == null) throw new NullReferenceException("Trying to colorize on NULL Excel.WorkBook!");
             if (worksheet == null) throw new NullReferenceException("Trying to colorize on NULL Excel.WorkSheet!");
 
-            await Task.Run(() => _colorizeValues(appearance, 1, updateInterval));
+            await Task.Run(() => _colorizeValues(appearance, 1, updateInterval), cancellationToken);
         }
 
         private void _colorizeValues(GridCellsAppearance appearance, int startY, int updateInterval)
@@ -104,7 +116,27 @@ namespace TSBExport_CSharp.Logic.Export
                 cancellationToken.ThrowIfCancellationRequested();
             }
 
+            // GRID COLOR FOR VALUES
+            range = worksheet.Range[Cells[valueY, 1], Cells[valueY + rows, columns]];
+            range.Borders.Color = appearance.gridColor;
+
             OnStateChanged?.Invoke("Colorized finished!", 0, 0);
+        }
+
+
+        private void InsertPicture(int row, int col, double offsetY = 0, double offsetX = 0)
+        {
+            Bitmap image = Resources.ImgSystem;
+            String fullPath = Decorator.GetTempFileNameWithExt("png");
+
+            double X = col < 2 ? 0 : Enumerable.Range(1, col-1).Sum(x => (double)Columns[x].Width);
+            double Y = row < 2 ? 0 : Enumerable.Range(1, row-1).Sum(y => (double)Rows[y].Height);
+
+            image.Save(fullPath, ImageFormat.Png);
+            worksheet.Shapes.AddPicture(fullPath, MsoTriState.msoFalse, MsoTriState.msoCTrue,
+                (int)Math.Ceiling(X+offsetX), (int)Math.Ceiling(Y+offsetY), (int)(image.Width * 0.6), (int)(image.Height * 0.6));
+
+            File.Delete(fullPath);
         }
 
         private void makeValues(int beginY, int rows, int columns, int updateInterval)
@@ -139,7 +171,7 @@ namespace TSBExport_CSharp.Logic.Export
             range.Value = data.Footers.ToExcelArray();
 
             // AUTOFIT COLUMNS
-            for (int i = 1; i < columns; i++)
+            for (int i = 1; i <= columns; i++)
             {
                 Columns[i].AutoFit();
             }

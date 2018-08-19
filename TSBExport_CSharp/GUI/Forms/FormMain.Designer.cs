@@ -28,34 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridView1 = new TSBExport_CSharp.GUI.Controls.ExtendedDataGridView();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip_Generate = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip_Table = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip_Colors = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip_Export = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip_Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip_excelNoStyle = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip_excel = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.toolStrip_Exit = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataGridView1 = new TSBExport_CSharp.GUI.Controls.ExtendedDataGridView();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(147)))), ((int)(((byte)(192)))), ((int)(((byte)(211)))));
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.FooterStyle = null;
-            this.dataGridView1.HeaderStyle = null;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 52);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dataGridView1.Size = new System.Drawing.Size(794, 357);
-            this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.VirtualMode = true;
             // 
             // menuStrip1
             // 
@@ -85,6 +71,7 @@
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
             this.toolStripMenuItem4.Size = new System.Drawing.Size(48, 38);
             this.toolStripMenuItem4.Text = "?";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // toolStrip_Generate
             // 
@@ -132,18 +119,6 @@
             this.toolStrip_Export.Size = new System.Drawing.Size(78, 38);
             this.toolStrip_Export.Text = "Export";
             // 
-            // toolStrip_Exit
-            // 
-            this.toolStrip_Exit.AutoSize = false;
-            this.toolStrip_Exit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(224)))), ((int)(((byte)(90)))));
-            this.toolStrip_Exit.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.toolStrip_Exit.ForeColor = System.Drawing.Color.Black;
-            this.toolStrip_Exit.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            this.toolStrip_Exit.Name = "toolStrip_Exit";
-            this.toolStrip_Exit.Size = new System.Drawing.Size(78, 38);
-            this.toolStrip_Exit.Text = "Exit";
-            this.toolStrip_Exit.Click += new System.EventHandler(this.toolStrip_Exit_Click);
-            // 
             // toolStrip_excelNoStyle
             // 
             this.toolStrip_excelNoStyle.Name = "toolStrip_excelNoStyle";
@@ -158,6 +133,35 @@
             this.toolStrip_excel.Text = "Excel";
             this.toolStrip_excel.Click += new System.EventHandler(this.toolStrip_excel_Click);
             // 
+            // toolStrip_Exit
+            // 
+            this.toolStrip_Exit.AutoSize = false;
+            this.toolStrip_Exit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(224)))), ((int)(((byte)(90)))));
+            this.toolStrip_Exit.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.toolStrip_Exit.ForeColor = System.Drawing.Color.Black;
+            this.toolStrip_Exit.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
+            this.toolStrip_Exit.Name = "toolStrip_Exit";
+            this.toolStrip_Exit.Size = new System.Drawing.Size(78, 38);
+            this.toolStrip_Exit.Text = "Exit";
+            this.toolStrip_Exit.Click += new System.EventHandler(this.toolStrip_Exit_Click);
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(147)))), ((int)(((byte)(192)))), ((int)(((byte)(211)))));
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.FooterStyle = null;
+            this.dataGridView1.FooterVisible = false;
+            this.dataGridView1.HeaderStyle = null;
+            this.dataGridView1.HeaderVisible = false;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 52);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dataGridView1.Size = new System.Drawing.Size(794, 357);
+            this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.VirtualMode = true;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
@@ -167,6 +171,7 @@
             this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "FormMain";
@@ -175,9 +180,9 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResizeBegin += new System.EventHandler(this.FormMain_ResizeBegin);
             this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }

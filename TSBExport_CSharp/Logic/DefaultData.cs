@@ -61,17 +61,16 @@ namespace TSBExport_CSharp
         {
             GridSettings ts = new GridSettings
             {
-                rndSeed = 322,
-                records = 500
+                rndSeed = 851649,
+                records = 100
             };
 
             ts.columns.AddRange(new[] {
                 new GridColumn("{row}."),
-                new GridColumn("Example Text"),
+                new GridColumn(10000d, 99999d, "N3"),
                 new GridColumn(10000, 99999),
                 new GridColumn(new DateTime(2010, 1, 1), new DateTime(2020, 12, 30), "dd MMMM yyyy, dddd"),
-                new GridColumn(new DateTime(2010, 1, 1, 0, 0, 0), new DateTime(2010, 1, 1, 23, 59, 59), "HH:mm:ss"),
-                new GridColumn(10000d, 99999d, "N3")
+                new GridColumn(new DateTime(2010, 1, 1, 0, 0, 0), new DateTime(2010, 1, 1, 23, 59, 59), "HH:mm:ss")
             });
 
             settings.GridSettings = ts;
@@ -136,7 +135,7 @@ namespace TSBExport_CSharp
         {
             DataGridViewCellStyle headersAndfooters = Decorator.MakeStyle(Color.White, Color.FromArgb(blue: 64, red: 64, green: 64));
             DataGridViewCellStyle gray = Decorator.MakeStyle(Color.Black, Color.LightGray);
-            DataGridViewCellStyle white = new DataGridViewCellStyle();
+            DataGridViewCellStyle white = Decorator.MakeStyle(Color.Black, Color.White);
 
             viewSettings.Add(new GridCellsAppearance
             {

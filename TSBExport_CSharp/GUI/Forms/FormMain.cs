@@ -207,6 +207,12 @@ namespace TSBExport_CSharp
 
             ExportExcel(this, dataTable, style);
         }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            string msg = "Example created by NoTimeForHero\nSource: https://github.com/NoTimeForHero/TSBExport_CSharp\n\nIcon by Aha-Soft\nLicense: Creative Commons (Attribution 3.0 Unported)\nSource: https://bit.ly/2PjyVXs";
+            MessageBox.Show(this,msg, "Credits", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 
 
