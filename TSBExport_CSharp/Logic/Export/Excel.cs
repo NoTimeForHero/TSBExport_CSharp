@@ -187,7 +187,7 @@ namespace TSBExport_CSharp.Logic.Export
             range.Merge();
             range.Value2 = "TSBExport_CSharp";
             range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
-            range.BorderAround2();
+            range.BorderAround();
             var font = range.Font;
             font.Bold = true;
             font.Size = 22;
@@ -198,7 +198,7 @@ namespace TSBExport_CSharp.Logic.Export
             range.Merge();
             range.Value2 = DateTime.Now.ToString("dd.MM.yyyy - HH:mm:ss");
             range.HorizontalAlignment = XlHAlign.xlHAlignCenter;
-            range.BorderAround2();
+            range.BorderAround();
             y++;
 
             // COLUMNS HEADERS

@@ -116,13 +116,9 @@ namespace TSBExport_CSharp
             dataGridView1.Refresh();
             dataGridView1.HeaderValues.AddRange(dataTable.Headers);
             dataGridView1.FooterValues.AddRange(dataTable.Footers);
-
-            // AUTO FIT NEW DATA
-            dataGridView1.ColumnsAutoFit();
-            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-
             UpdateDataGridColor(currentGridCellsAppearance);
             UpdateDataGridFormat();
+            dataGridView1.AutoSizeNaive();
             BindFormatChangeEvent();
             dataGridView1.ClearSelection();
             ResumeLayout(true);

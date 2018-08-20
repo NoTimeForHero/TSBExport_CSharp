@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TSBExport_CSharp.Grid;
@@ -50,7 +51,6 @@ namespace TSBExport_CSharp.GUI.Controls
             if (dataTable == null) throw new ArgumentException("BindingSource DataSource must be DataTable!");
             RowCount = bindingSrc.Count + HeaderHeight + FooterHeight;
             ColumnCount = bindingSrc.GetItemProperties(null).Count;
-            Console.WriteLine("CURRENT COLUMNS: " + ColumnCount);
             VirtualMode = true;
         }
 
@@ -154,15 +154,6 @@ namespace TSBExport_CSharp.GUI.Controls
             e.Value = value;
         }
 
-        public void ColumnsAutoFit()
-        {
-            for (int i = 0; i < ColumnCount; i++)
-                Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            Columns[ColumnCount - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            for (int i = 0; i < ColumnCount; i++)
-                Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool InFooterOrHeader(int RowIndex)
         {
@@ -191,6 +182,31 @@ namespace TSBExport_CSharp.GUI.Controls
                 {
                     Rows[y].Cells[x].Style = colorize(x, y - HeaderHeight);
                 }
+            }
+        }
+
+        public void AutoSizeNaive()
+        {
+            if (RowCount < 2 || ColumnCount < 2) return;
+
+            using (Graphics g = CreateGraphics())
+            {
+                int maxHeight = -1;
+
+                for (int i = 0; i < ColumnCount; i++)
+                {
+                    var cell = Rows[1].Cells[i];
+                    var value = cell.FormattedValue?.ToString() ?? cell.Value.ToString();
+
+                    int height = (int) Math.Round(g.MeasureString(value, cell.Style.Font ?? DefaultCellStyle.Font).Height);
+                    if (height > maxHeight) maxHeight = height;
+
+                    int width = (int)Math.Round(g.MeasureString(value, cell.Style.Font ?? DefaultCellStyle.Font).Width);
+                    Columns[i].Width = width + 20;
+                }
+
+                maxHeight += Padding.Top + Padding.Bottom + 6; // const - border size?
+                for (int i = 0; i < RowCount; i++) Rows[i].Height = maxHeight;
             }
         }
     }
